@@ -317,39 +317,41 @@ if(
   return;
 }
 
-  try {
+try {
 
-    // Samsung Browser pode falhar com createImageBitmap()
-// então forçamos o caminho mais compatível.
-if(false && window.createImageBitmap){
-  try{
-    bitmap = await createImageBitmap(fileObj);
-  }catch(e){
-    console.warn('createImageBitmap falhou', e);
+  let bitmap = null;
+
+  // Samsung Browser pode falhar com createImageBitmap()
+  // então forçamos o caminho mais compatível.
+  if(false && window.createImageBitmap){
+    try{
+      bitmap = await createImageBitmap(fileObj);
+    }catch(e){
+      console.warn('createImageBitmap falhou', e);
+    }
   }
-}
 
-if(bitmap){
+  if(bitmap){
 
-  alert(
-    'Bitmap OK: ' +
-    bitmap.width +
-    ' x ' +
-    bitmap.height
-  );
+    alert(
+      'Bitmap OK: ' +
+      bitmap.width +
+      ' x ' +
+      bitmap.height
+    );
 
-  img = bitmap;
+    img = bitmap;
 
-  baseScale = Math.max(
-    HOLE.w / bitmap.width,
-    HOLE.h / bitmap.height
-  );
+    baseScale = Math.max(
+      HOLE.w / bitmap.width,
+      HOLE.h / bitmap.height
+    );
 
-}else{
+  }else{
 
-  alert('Entrou no fallback Image()');
+    alert('Entrou no fallback Image()');
 
-      const objectUrl = URL.createObjectURL(fileObj);
+    const objectUrl = URL.createObjectURL(fileObj);
 
       const im = new Image();
 
