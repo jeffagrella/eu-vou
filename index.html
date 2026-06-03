@@ -330,16 +330,25 @@ if(
       }
     }
 
-    if(bitmap){
+   if(bitmap){
 
-      img = bitmap;
+  alert(
+    'Bitmap OK: ' +
+    bitmap.width +
+    ' x ' +
+    bitmap.height
+  );
 
-      baseScale = Math.max(
-        HOLE.w / bitmap.width,
-        HOLE.h / bitmap.height
-      );
+  img = bitmap;
 
-    }else{
+  baseScale = Math.max(
+    HOLE.w / bitmap.width,
+    HOLE.h / bitmap.height
+  );
+
+}else{
+
+  alert('Entrou no fallback Image()');
 
       const objectUrl = URL.createObjectURL(fileObj);
 
