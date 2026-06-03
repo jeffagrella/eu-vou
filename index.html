@@ -259,58 +259,50 @@ async function loadImage(fileObj){
   );
 
   // Converte HEIC/HEIF para JPEG
-  if (
-    fileObj.type === 'image/heic' ||
-    fileObj.type === 'image/heif' ||
-    fileObj.name.toLowerCase().endsWith('.heic') ||
-    fileObj.name.toLowerCase().endsWith('.heif')
-  ) {
+if (
+  fileObj.type === 'image/heic' ||
+  fileObj.type === 'image/heif' ||
+  fileObj.name.toLowerCase().endsWith('.heic') ||
+  fileObj.name.toLowerCase().endsWith('.heif')
+) {
 
-    try {
+  try {
 
-      alert('Convertendo HEIC...');
+    alert('Convertendo HEIC...');
 
-      const convertedBlob = await heic2any({
-        blob: fileObj,
-        toType: 'image/jpeg',
-        quality: 0.95
-      });
+    const convertedBlob = await heic2any({
+      blob: fileObj,
+      toType: 'image/jpeg',
+      quality: 0.95
+    });
 
-      alert('HEIC convertido!');
+    alert('HEIC convertido!');
 
-const convertedBlob = await heic2any({
-  blob: fileObj,
-  toType: 'image/jpeg',
-  quality: 0.95
-});
+    console.log('Blob convertido:', convertedBlob);
 
-alert('HEIC convertido!');
+    alert(
+      'Tipo convertido: ' +
+      convertedBlob.type +
+      '\nTamanho: ' +
+      convertedBlob.size
+    );
 
-console.log('Blob convertido:', convertedBlob);
+    fileObj = new File(
+      [convertedBlob],
+      'converted.jpg',
+      { type: 'image/jpeg' }
+    );
 
-alert(
-  'Tipo convertido: ' +
-  convertedBlob.type +
-  '\nTamanho: ' +
-  convertedBlob.size
-);
+  } catch(err) {
 
-fileObj = new File(
-  [convertedBlob],
-  'converted.jpg',
-  { type: 'image/jpeg' }
-);
+    console.error(err);
 
-} catch(err) {
+    alert(
+      'Falha ao converter a imagem HEIC.'
+    );
 
-  console.error(err);
-
-  alert(
-    'Falha ao converter a imagem HEIC.'
-  );
-
-  return;
-}
+    return;
+  }
 }
 
 const mime = (fileObj.type || '').toLowerCase();
