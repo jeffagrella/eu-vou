@@ -263,12 +263,16 @@ async function loadImage(fileObj){
 
     try {
 
-      const convertedBlob = await heic2any({
-        blob: fileObj,
-        toType: 'image/jpeg',
-        quality: 0.95
-      });
+alert('Convertendo HEIC...');
 
+const convertedBlob = await heic2any({
+  blob: fileObj,
+  toType: 'image/jpeg',
+  quality: 0.95
+});
+
+alert('HEIC convertido!');
+      
       fileObj = new File(
         [convertedBlob],
         'converted.jpg',
