@@ -259,9 +259,8 @@ async function loadImage(fileObj){
   );
 
   // Converte HEIC/HEIF para JPEG
+
 if (
-  fileObj.type === 'image/heic' ||
-  fileObj.type === 'image/heif' ||
   fileObj.name.toLowerCase().endsWith('.heic') ||
   fileObj.name.toLowerCase().endsWith('.heif')
 ) {
