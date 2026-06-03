@@ -247,25 +247,44 @@ function loadImage(fileObj){
   if(!fileObj || !fileObj.type.startsWith('image/')) return;
   const reader = new FileReader();
   reader.onload = e => {
-    const im = new Image();
-    im.onload = () => {
-      img = im;
-      baseScale = Math.max(HOLE.w/im.naturalWidth, HOLE.h/im.naturalHeight);
-      zoom = 1; offX = 0; offY = 0;
-      zoomEl.value = 1;
-      emptyHint.classList.add('hide');
-      zoomRow.classList.add('on');
-      document.getElementById('resetBtn').disabled = false;
-      document.getElementById('changeBtn').disabled = false;
-      document.getElementById('downloadBtn').disabled = false;
-      clampOffsets();
-      draw();
-    };
-    im.src = e.target.result;
+  const im = new Image();
+
+  im.onerror = err => {
+    alert("Erro ao carregar a imagem");
+    console.error(err);
   };
+
+  im.onload = () => {
+    alert(
+      "Imagem carregada: " +
+      im.naturalWidth +
+      " x " +
+      im.naturalHeight
+    );
+
+    img = im;
+    baseScale = Math.max(HOLE.w/im.naturalWidth, HOLE.h/im.naturalHeight);
+    zoom = 1;
+    offX = 0;
+    offY = 0;
+    zoomEl.value = 1;
+
+    emptyHint.classList.add('hide');
+    zoomRow.classList.add('on');
+
+    document.getElementById('resetBtn').disabled = false;
+    document.getElementById('changeBtn').disabled = false;
+    document.getElementById('downloadBtn').disabled = false;
+
+    clampOffsets();
+    draw();
+  };
+
+   im.src = e.target.result;
+};
+
   reader.readAsDataURL(fileObj);
 }
-
 // ---- upload triggers
 document.getElementById('uploadBtn').onclick = () => fileInput.click();
 document.getElementById('changeBtn').onclick = () => fileInput.click();
