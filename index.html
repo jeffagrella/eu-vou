@@ -384,9 +384,16 @@ try {
     document.getElementById('changeBtn').disabled = false;
     document.getElementById('downloadBtn').disabled = false;
 
-    clampOffsets();
-    draw();
+  alert(
+  'Imagem carregada\n' +
+  'Largura: ' + img.naturalWidth +
+  '\nAltura: ' + img.naturalHeight +
+  '\nBaseScale: ' + baseScale
+);
 
+clampOffsets();
+draw();
+  
   } catch(err){
 
     console.error(err);
