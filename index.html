@@ -253,6 +253,11 @@ async function loadImage(fileObj){
 
   if(!fileObj) return;
 
+  alert(
+    'Tipo: ' + fileObj.type +
+    '\nNome: ' + fileObj.name
+  );
+
   // Converte HEIC/HEIF para JPEG
   if (
     fileObj.type === 'image/heic' ||
@@ -263,7 +268,15 @@ async function loadImage(fileObj){
 
     try {
 
-alert('Convertendo HEIC...');
+      alert('Convertendo HEIC...');
+
+      const convertedBlob = await heic2any({
+        blob: fileObj,
+        toType: 'image/jpeg',
+        quality: 0.95
+      });
+
+      alert('HEIC convertido!');
 
 const convertedBlob = await heic2any({
   blob: fileObj,
