@@ -285,34 +285,43 @@ const convertedBlob = await heic2any({
 });
 
 alert('HEIC convertido!');
-      
-      fileObj = new File(
-        [convertedBlob],
-        'converted.jpg',
-        { type: 'image/jpeg' }
-      );
 
-    } catch(err) {
+console.log('Blob convertido:', convertedBlob);
 
-      console.error(err);
+alert(
+  'Tipo convertido: ' +
+  convertedBlob.type +
+  '\nTamanho: ' +
+  convertedBlob.size
+);
 
-      alert(
-        'Falha ao converter a imagem HEIC.'
-      );
+fileObj = new File(
+  [convertedBlob],
+  'converted.jpg',
+  { type: 'image/jpeg' }
+);
 
-      return;
-    }
-  }
+} catch(err) {
 
-  const mime = (fileObj.type || '').toLowerCase();
+  console.error(err);
 
-  if(
-    !mime.startsWith('image/') &&
-    !fileObj.name.toLowerCase().match(/\.(jpg|jpeg|png|heic|heif|webp)$/)
-  ){
-    alert('Formato de imagem não suportado');
-    return;
-  }
+  alert(
+    'Falha ao converter a imagem HEIC.'
+  );
+
+  return;
+}
+}
+
+const mime = (fileObj.type || '').toLowerCase();
+
+if(
+  !mime.startsWith('image/') &&
+  !fileObj.name.toLowerCase().match(/\.(jpg|jpeg|png|heic|heif|webp)$/)
+){
+  alert('Formato de imagem não suportado');
+  return;
+}
 
   try {
 
