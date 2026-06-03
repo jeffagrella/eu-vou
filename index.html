@@ -288,11 +288,14 @@ if (
     );
 
     fileObj = new File(
-      [convertedBlob],
-      'converted.jpg',
-      { type: 'image/jpeg' }
-    );
+  [convertedBlob],
+  'converted.jpg',
+  { type: 'image/jpeg' }
+);
 
+const testUrl = URL.createObjectURL(fileObj);
+window.open(testUrl, '_blank');
+    
   } catch(err) {
 
     console.error(err);
