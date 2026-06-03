@@ -258,8 +258,7 @@ async function loadImage(fileObj){
     '\nNome: ' + fileObj.name
   );
 
-  // Converte HEIC/HEIF para JPEG
-
+ // Converte HEIC/HEIF para JPEG
 if (
   fileObj.name.toLowerCase().endsWith('.heic') ||
   fileObj.name.toLowerCase().endsWith('.heif')
@@ -267,34 +266,18 @@ if (
 
   try {
 
-    alert('Convertendo HEIC...');
-
     const convertedBlob = await heic2any({
       blob: fileObj,
       toType: 'image/jpeg',
       quality: 0.95
     });
 
-    alert('HEIC convertido!');
-
-    console.log('Blob convertido:', convertedBlob);
-
-    alert(
-      'Tipo convertido: ' +
-      convertedBlob.type +
-      '\nTamanho: ' +
-      convertedBlob.size
+    fileObj = new File(
+      [convertedBlob],
+      'converted.jpg',
+      { type: 'image/jpeg' }
     );
 
-    fileObj = new File(
-  [convertedBlob],
-  'converted.jpg',
-  { type: 'image/jpeg' }
-);
-
-const testUrl = URL.createObjectURL(fileObj);
-window.open(testUrl, '_blank');
-    
   } catch(err) {
 
     console.error(err);
@@ -321,17 +304,17 @@ try {
 
   let bitmap = null;
 
-  // Samsung Browser pode falhar com createImageBitmap()
-  // então forçamos o caminho mais compatível.
-  if(false && window.createImageBitmap){
-    try{
-      bitmap = await createImageBitmap(fileObj);
-    }catch(e){
-      console.warn('createImageBitmap falhou', e);
-    }
+// Samsung Browser pode falhar com createImageBitmap()
+// então forçamos o caminho mais compatível.
+if(false && window.createImageBitmap){
+  try{
+    bitmap = await createImageBitmap(fileObj);
+  }catch(e){
+    console.warn('createImageBitmap falhou', e);
   }
+}
 
-  if(bitmap){
+if(bitmap){
 
     alert(
       'Bitmap OK: ' +
