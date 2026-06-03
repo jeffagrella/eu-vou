@@ -290,49 +290,6 @@ document.getElementById('zoomIn').onclick  = () => setZoom(zoom*1.12);
 document.getElementById('zoomOut').onclick = () => setZoom(zoom/1.12);
 document.getElementById('resetBtn').onclick = () => { offX=0; offY=0; setZoom(1); };
 
-// ---- pan (pointer) + pinch
-const pointers = new Map();
-let last = null, pinchDist = 0, pinchZoom = 1;
-function toCanvasScale(){ return CW / stage.getBoundingClientRect().width; }
-
-stage.addEventListener('pointerdown', e=>{
-  if(!img) return;
-  stage.setPointerCapture(e.pointerId);
-  pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
-  if(pointers.size===1){ last={x:e.clientX,y:e.clientY}; stage.classList.add('drag'); }
-  else if(pointers.size===2){
-    const p=[...pointers.values()];
-    pinchDist=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y);
-    pinchZoom=zoom;
-  }
-});
-stage.addEventListener('pointermove', e=>{
-  if(!img || !pointers.has(e.pointerId)) return;
-  pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
-  if(pointers.size>=2){
-    const p=[...pointers.values()];
-    const d=Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y);
-    if(pinchDist>0) setZoom(pinchZoom * (d/pinchDist));
-    return;
-  }
-  if(last){
-    const k=toCanvasScale();
-    offX += (e.clientX-last.x)*k;
-    offY += (e.clientY-last.y)*k;
-    last={x:e.clientX,y:e.clientY};
-    clampOffsets();
-    draw();
-  }
-});
-function endPointer(e){
-  pointers.delete(e.pointerId);
-  if(pointers.size<2) pinchDist=0;
-  if(pointers.size===0){ last=null; stage.classList.remove('drag'); }
-  else { const p=[...pointers.values()][0]; last={x:p.x,y:p.y}; }
-}
-stage.addEventListener('pointerup',endPointer);
-stage.addEventListener('pointercancel',endPointer);
-
 // wheel zoom (desktop)
 stage.addEventListener('wheel', e=>{
   if(!img) return;
