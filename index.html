@@ -243,38 +243,54 @@ function draw(){
   if(frameReady) ctx.drawImage(frame,0,0,CW,CH);
 }
 
-function loadImage(fileObj){
+async function loadImage(fileObj){
 
-  alert(
-    "Arquivo: " +
-    (fileObj ? fileObj.name : "null") +
-    " | Tipo: " +
-    (fileObj ? fileObj.type : "null")
-  );
+  if(!fileObj) return;
 
-  if(!fileObj || !fileObj.type.startsWith('image/')) return;
+  const mime = (fileObj.type || '').toLowerCase();
 
-  const reader = new FileReader();
+  if(
+    !mime.startsWith('image/') &&
+    !fileObj.name.toLowerCase().match(/\.(jpg|jpeg|png|heic|heif|webp)$/)
+  ){
+    alert('Formato de imagem não suportado');
+    return;
+  }
 
-  reader.onload = e => {
+  try {
 
-    alert("reader.onload executou");
+    let bitmap = null;
 
-    const im = new Image();
+    if(window.createImageBitmap){
+      try{
+        bitmap = await createImageBitmap(fileObj);
+      }catch(e){
+        console.warn('createImageBitmap falhou', e);
+      }
+    }
 
-    im.onerror = err => {
-      alert("Erro ao carregar a imagem");
-      console.error(err);
-    };
+    if(bitmap){
 
-    im.onload = () => {
+      img = bitmap;
 
-      alert(
-        "Imagem carregada: " +
-        im.naturalWidth +
-        " x " +
-        im.naturalHeight
+      baseScale = Math.max(
+        HOLE.w / bitmap.width,
+        HOLE.h / bitmap.height
       );
+
+    }else{
+
+      const objectUrl = URL.createObjectURL(fileObj);
+
+      const im = new Image();
+
+      await new Promise((resolve,reject)=>{
+        im.onload = resolve;
+        im.onerror = reject;
+        im.src = objectUrl;
+      });
+
+      URL.revokeObjectURL(objectUrl);
 
       img = im;
 
@@ -282,28 +298,34 @@ function loadImage(fileObj){
         HOLE.w / im.naturalWidth,
         HOLE.h / im.naturalHeight
       );
+    }
 
-      zoom = 1;
-      offX = 0;
-      offY = 0;
+    zoom = 1;
+    offX = 0;
+    offY = 0;
 
-      zoomEl.value = 1;
+    zoomEl.value = 1;
 
-      emptyHint.classList.add('hide');
-      zoomRow.classList.add('on');
+    emptyHint.classList.add('hide');
+    zoomRow.classList.add('on');
 
-      document.getElementById('resetBtn').disabled = false;
-      document.getElementById('changeBtn').disabled = false;
-      document.getElementById('downloadBtn').disabled = false;
+    document.getElementById('resetBtn').disabled = false;
+    document.getElementById('changeBtn').disabled = false;
+    document.getElementById('downloadBtn').disabled = false;
 
-      clampOffsets();
-      draw();
-    };
+    clampOffsets();
+    draw();
 
-    im.src = e.target.result;
-  };
+  } catch(err){
 
-  reader.readAsDataURL(fileObj);
+    console.error(err);
+
+    alert(
+      'Não foi possível carregar esta imagem.\n\n' +
+      'Formato detectado: ' +
+      (fileObj.type || 'desconhecido')
+    );
+  }
 }
   
 // ---- upload triggers
