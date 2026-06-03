@@ -319,17 +319,17 @@ if(
 
   try {
 
-    let bitmap = null;
+    // Samsung Browser pode falhar com createImageBitmap()
+// então forçamos o caminho mais compatível.
+if(false && window.createImageBitmap){
+  try{
+    bitmap = await createImageBitmap(fileObj);
+  }catch(e){
+    console.warn('createImageBitmap falhou', e);
+  }
+}
 
-    if(window.createImageBitmap){
-      try{
-        bitmap = await createImageBitmap(fileObj);
-      }catch(e){
-        console.warn('createImageBitmap falhou', e);
-      }
-    }
-
-   if(bitmap){
+if(bitmap){
 
   alert(
     'Bitmap OK: ' +
